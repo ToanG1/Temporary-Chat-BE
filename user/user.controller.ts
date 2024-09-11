@@ -3,12 +3,15 @@ import { createUser, findUser } from "./user.service";
 import { send } from "../mail/mail.controller";
 import { createRefreshToken, createToken } from "./jwt.service";
 import { saveRefreshToken } from "./token.service";
+import { ICreateUserRequest } from "../dto/user.interface";
+import { IResponse } from "../dto/common.interface";
+import { ILoginRequest, ILoginResponse } from "../dto/login.interface";
 
 const signup = api(
   { expose: true, method: "POST", path: "/auth/signup" },
   async (request: ICreateUserRequest): Promise<IResponse> => {
     try {
-      const pwd = await createUser(request.email, request.name);
+      const pwd = await createUser(request);
 
       send({
         to: request.email,
@@ -35,7 +38,7 @@ const login = api(
       );
     }
 
-    const { userId, name } = await findUser(request.email, request.password);
+    const { userId, name } = await findUser(request);
     if (!name) {
       throw new APIError(ErrCode.InvalidArgument, "Invalid email or password");
     }
@@ -52,24 +55,3 @@ const login = api(
 );
 
 export { signup, login };
-
-interface IResponse {
-  code: number;
-  message: string;
-}
-
-interface ICreateUserRequest {
-  email: string;
-  name: string;
-}
-
-interface ILoginRequest {
-  email: string;
-  password: string;
-}
-
-interface ILoginResponse {
-  token: string;
-  refreshToken: string;
-  name: string;
-}
