@@ -1,4 +1,4 @@
-import { Header, Gateway, APIError } from "encore.dev/api";
+import { Header, APIError, Gateway } from "encore.dev/api";
 import { authHandler } from "encore.dev/auth";
 import { verifyToken } from "../user/jwt.service";
 
@@ -11,11 +11,15 @@ interface AuthData {
 }
 
 export const auth = authHandler<AuthParams, AuthData>(async (params) => {
-  const isAuthenticated = await verifyToken(params.authorization);
-  if (!isAuthenticated) {
-    throw APIError.unauthenticated("Invalid token");
+  const payload = await verifyToken(params.authorization);
+  if (!payload) {
+    throw APIError.unauthenticated("Unauthorized");
   }
-  return { userID: "my-user-id" };
+
+  return {
+    userID: payload?.accountId,
+    name: payload?.name,
+  };
 });
 
 export const gateway = new Gateway({

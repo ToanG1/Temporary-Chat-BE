@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 
-const createToken = (name: string): string => {
-  return jwt.sign({ name }, "secret", {
+const createToken = (accountId: string, name: string): string => {
+  return jwt.sign({ accountId, name }, "secret", {
     expiresIn: "1h",
   });
 };
 
-const createRefreshToken = (name: string): string => {
-  return jwt.sign({ name }, "supersecret", {
+const createRefreshToken = (accountId: string): string => {
+  return jwt.sign({ accountId }, "supersecret", {
     expiresIn: "7d",
   });
 };

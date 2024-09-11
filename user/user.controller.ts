@@ -38,16 +38,16 @@ const login = api(
       );
     }
 
-    const { userId, name } = await findUser(request);
-    if (!name) {
+    const { userId, accountId, name } = await findUser(request);
+    if (!userId) {
       throw new APIError(ErrCode.InvalidArgument, "Invalid email or password");
     }
 
-    const refreshToken = createRefreshToken(name);
+    const refreshToken = createRefreshToken(accountId);
     await saveRefreshToken(userId, refreshToken);
 
     return {
-      token: createToken(name),
+      token: createToken(accountId, name),
       refreshToken,
       name,
     };
