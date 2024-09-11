@@ -9,6 +9,7 @@
     "test": "vitest"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20.5.7",
     "@types/nodemailer": "^6.4.15",
     "typescript": "^5.2.2",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "encore.dev": "^1.40.4",
+    "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.15"
   },
   "optionalDependencies": {
