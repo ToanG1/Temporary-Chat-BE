@@ -1,8 +1,8 @@
 import { SQLDatabase } from "encore.dev/storage/sqldb";
 import { getRandomValues, randomBytes, randomInt } from "node:crypto";
 import { APIError, ErrCode } from "encore.dev/api";
-import { ICreateUserRequest } from "../dto/user.interface";
-import { ILoginRequest } from "../dto/login.interface";
+import { ICreateUserRequest } from "../dtos/user.interface";
+import { ILoginRequest } from "../dtos/login.interface";
 
 const database = new SQLDatabase("user", { migrations: "./migrations" });
 

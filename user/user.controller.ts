@@ -3,9 +3,9 @@ import { createUser, findUser } from "./user.service";
 import { send } from "../mail/mail.controller";
 import { createRefreshToken, createToken } from "./jwt.service";
 import { saveRefreshToken } from "./token.service";
-import { ICreateUserRequest } from "../dto/user.interface";
-import { IResponse } from "../dto/common.interface";
-import { ILoginRequest, ILoginResponse } from "../dto/login.interface";
+import { ICreateUserRequest } from "../dtos/user.interface";
+import { IResponse } from "../dtos/common.interface";
+import { ILoginRequest, ILoginResponse } from "../dtos/login.interface";
 
 const signup = api(
   { expose: true, method: "POST", path: "/auth/signup" },
