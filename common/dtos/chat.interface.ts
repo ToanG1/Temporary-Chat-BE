@@ -1,3 +1,4 @@
+import { StreamInOut } from "encore.dev/api";
 import { MessageType } from "../enums/messageType.enum";
 
 export interface IHandshakeRequest {
@@ -23,7 +24,7 @@ export interface ICreateRoomUserRequest {
   userIds: string[];
 }
 
-export interface IChatId {
-  userId: string;
+export interface IChatRoom {
   roomId: string;
+  connectedStreams: Map<string, StreamInOut<IMessage, IMessage>>;
 }

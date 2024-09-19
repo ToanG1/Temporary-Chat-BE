@@ -1,6 +1,7 @@
 import { api, APIError, StreamInOut } from "encore.dev/api";
 import {
   IChatId,
+  IChatRoom,
   ICreateRoomRequest,
   ICreateRoomResponse,
   ICreateRoomUserRequest,
@@ -16,10 +17,7 @@ import {
 import log from "encore.dev/log";
 import { getAuthData } from "~encore/auth";
 
-const connectedStreams: Map<
-  IChatId,
-  StreamInOut<IMessage, IMessage>
-> = new Map();
+const chatRooms: IChatRoom[] = [];
 
 const chat = api.streamInOut<IHandshakeRequest, IMessage, IMessage>(
   {
@@ -33,14 +31,20 @@ const chat = api.streamInOut<IHandshakeRequest, IMessage, IMessage>(
       throw APIError.permissionDenied("Unauthorized");
     }
 
-    const chatId: IChatId = { userId, roomId: handshake.roomId };
-    connectedStreams.set(chatId, stream);
+    if (!chatRooms.find((room) => room.roomId === handshake.roomId)) {
+      chatRooms.push({
+        roomId: handshake.roomId,
+        connectedStreams: new Map<string, StreamInOut<IMessage, IMessage>>(),
+      });
+    }
+    const room = chatRooms.find((room) => room.roomId === handshake.roomId)!;
+    const connectedStreams = room.connectedStreams.set(userId, stream);
 
     try {
       for await (const message of stream) {
-        for (const [key, val] of connectedStreams) {
+        for (const [key, val] of room.connectedStreams) {
           try {
-            console.log(connectedStreams);
+            console.log(chatRooms);
             message.userId = userId!;
             createMessage(handshake.roomId, message);
             await val.send(message);
@@ -51,10 +55,7 @@ const chat = api.streamInOut<IHandshakeRequest, IMessage, IMessage>(
       }
     } catch (err) {
       log.error("stream error", err);
-      connectedStreams.delete(chatId);
     }
-
-    connectedStreams.delete(chatId);
   }
 );
 
