@@ -1,6 +1,5 @@
 import { api, APIError, StreamInOut } from "encore.dev/api";
 import {
-  IChatId,
   IChatRoom,
   ICreateRoomRequest,
   ICreateRoomResponse,
@@ -37,6 +36,7 @@ const chat = api.streamInOut<IHandshakeRequest, IMessage, IMessage>(
         connectedStreams: new Map<string, StreamInOut<IMessage, IMessage>>(),
       });
     }
+
     const room = chatRooms.find((room) => room.roomId === handshake.roomId)!;
     const connectedStreams = room.connectedStreams.set(userId, stream);
 
@@ -44,7 +44,6 @@ const chat = api.streamInOut<IHandshakeRequest, IMessage, IMessage>(
       for await (const message of stream) {
         for (const [key, val] of room.connectedStreams) {
           try {
-            console.log(chatRooms);
             message.userId = userId!;
             createMessage(handshake.roomId, message);
             await val.send(message);
