@@ -1,5 +1,3 @@
-drop database IF EXISTS user_template;
-
 CREATE TABLE IF NOT EXISTS MAIL_LOGS (
     ID SERIAL PRIMARY KEY ,
     EMAIL TEXT NOT NULL,
