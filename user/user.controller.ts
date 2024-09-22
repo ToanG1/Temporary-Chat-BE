@@ -1,11 +1,15 @@
 import { api, APIError, ErrCode } from "encore.dev/api";
-import { createUser, findUser } from "./user.service";
+import { createUser, findUser, changePassword } from "./user.service";
 import { send } from "../mail/mail.controller";
 import { createRefreshToken, createToken } from "./jwt.service";
-import { saveRefreshToken } from "./token.service";
-import { ICreateUserRequest } from "../common/dtos/user.interface";
+import { deleteRefreshToken, saveRefreshToken } from "./token.service";
+import {
+  IChangePasswordRequest,
+  ICreateUserRequest,
+} from "../common/dtos/user.interface";
 import { IResponse } from "../common/dtos/common.interface";
 import { ILoginRequest, ILoginResponse } from "../common/dtos/login.interface";
+import { getAuthData } from "~encore/auth";
 
 const signup = api(
   { expose: true, method: "POST", path: "/auth/signup" },
@@ -44,6 +48,8 @@ const login = api(
     }
 
     const refreshToken = createRefreshToken(accountId);
+
+    await deleteRefreshToken(userId);
     await saveRefreshToken(userId, refreshToken);
 
     return {
@@ -54,4 +60,24 @@ const login = api(
   }
 );
 
-export { signup, login };
+const changeUserPassword = api(
+  { expose: true, auth: true, method: "POST", path: "/auth/changePassword" },
+  async (request: IChangePasswordRequest): Promise<IResponse> => {
+    const userID = getAuthData()?.userID;
+    if (!userID || !request.oldPassword || !request.newPassword) {
+      throw new APIError(
+        ErrCode.InvalidArgument,
+        "Email, old password and new password are required"
+      );
+    }
+
+    changePassword(userID!, request);
+
+    return {
+      code: 200,
+      message: "Your password has been changed!",
+    };
+  }
+);
+
+export { signup, login, changeUserPassword };

@@ -12,6 +12,13 @@ const saveRefreshToken = async (
     `;
 };
 
+const deleteRefreshToken = async (userId: string): Promise<void> => {
+  await database.exec`
+        DELETE FROM TOKENS 
+        WHERE USER_ID = ${userId}
+    `;
+};
+
 const isRefreshTokenValid = async (
   userId: number,
   refreshToken: string
@@ -26,4 +33,4 @@ const isRefreshTokenValid = async (
   return result?.exists || false;
 };
 
-export { saveRefreshToken, isRefreshTokenValid };
+export { saveRefreshToken, deleteRefreshToken, isRefreshTokenValid };

@@ -1,3 +1,4 @@
+import { IChangePasswordRequest } from "./../common/dtos/user.interface";
 import { SQLDatabase } from "encore.dev/storage/sqldb";
 import { getRandomValues, randomBytes, randomInt } from "node:crypto";
 import { APIError, ErrCode } from "encore.dev/api";
@@ -39,4 +40,12 @@ const findUser = async (request: ILoginRequest) => {
   };
 };
 
-export { createUser, findUser };
+const changePassword = (userId: string, request: IChangePasswordRequest) => {
+  database.exec`
+      UPDATE USERS
+      SET PASSWORD = ${request.newPassword}
+      WHERE ACCOUNT_ID = ${userId} AND PASSWORD = ${request.oldPassword}
+    `;
+};
+
+export { createUser, findUser, changePassword };
