@@ -16,7 +16,7 @@
     "vitest": "^1.5.0"
   },
   "dependencies": {
-    "encore.dev": "^1.41.3",
+    "encore.dev": "^1.41.4",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^6.9.15"
   },
