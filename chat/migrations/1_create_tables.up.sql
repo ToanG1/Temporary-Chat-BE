@@ -1,4 +1,4 @@
-drop table IF EXISTS user_template;
+drop database IF EXISTS user_template;
 
 CREATE TABLE IF NOT EXISTS ROOMS (
     ID TEXT PRIMARY KEY,
