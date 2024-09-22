@@ -1,4 +1,4 @@
-drop table IF EXISTS user_template;
+drop table IF EXISTS "user_template";
 
 CREATE TABLE IF NOT EXISTS USERS (
     ID SERIAL PRIMARY KEY,
